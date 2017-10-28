@@ -13,6 +13,7 @@ import com.jfinal.core.JFinal;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.redis.RedisPlugin;
 import com.jfinal.template.Engine;
 
 /**
@@ -34,12 +35,12 @@ public class DemoConfig extends JFinalConfig {
         /**
          * 特别注意：Eclipse 之下建议的启动方式
          */
-        JFinal.start("src/main/webapp", 80, "/", 5);
+//        JFinal.start("src/main/webapp", 80, "/", 5);
 
         /**
          * 特别注意：IDEA 之下建议的启动方式，仅比 eclipse 之下少了最后一个参数
          */
-        // JFinal.start("src/main/webapp", 80, "/");
+         JFinal.start("src/main/webapp", 80, "/");
     }
 
     /**
@@ -77,6 +78,8 @@ public class DemoConfig extends JFinalConfig {
         // 所有映射在 MappingKit 中自动化搞定
         _MappingKit.mapping(arp);
         me.add(arp);
+        //配置redisPlugin
+        me.add(new RedisPlugin("blog", "127.0.0.1", 6379));
     }
 
     public static DruidPlugin createDruidPlugin() {

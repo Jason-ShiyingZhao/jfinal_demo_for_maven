@@ -1,8 +1,9 @@
 package com.demo.blog;
 
+import com.demo.common.model.Blog;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.demo.common.model.Blog;
+import com.jfinal.plugin.activerecord.Page;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -17,7 +18,8 @@ public class BlogController extends Controller {
     static BlogService service = new BlogService();
 
     public void index() {
-        setAttr("blogPage", service.paginate(getParaToInt(0, 1), 10));
+        Page<Blog> page = service.paginate(getParaToInt(0, 1), 10);
+        setAttr("blogPage", page);
         render("blog.html");
     }
 
