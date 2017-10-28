@@ -18,12 +18,12 @@ public class BlogService {
     /**
      * 所有的 dao 对象也放在 Service 中
      */
-    private static final Blog dao = new Blog().dao();
+    private static final Blog dao = Blog.dao;
     private static final Cache redisBlog = Redis.use("blog");
     public Page<Blog> paginate(int pageNumber, int pageSize) {
         Page<Blog> page = redisBlog.get("blogPage");
         if(null == page){
-            page = dao.paginate(pageNumber, pageSize, "select *", "from blog order by id asc");
+            page = Blog.dao.getAllBlogPage(pageNumber, pageSize);
             redisBlog.set("blogPage", page);
         }
         return page;
