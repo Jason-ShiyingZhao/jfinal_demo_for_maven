@@ -1,6 +1,7 @@
 package com.demo.blog;
 
 import com.demo.common.model.Blog;
+import com.jfinal.aop.Duang;
 import com.jfinal.plugin.activerecord.Page;
 
 /**

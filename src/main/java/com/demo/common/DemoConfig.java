@@ -1,8 +1,11 @@
 package com.demo.common;
 
 import com.demo.blog.BlogController;
+import com.demo.blog.BlogInterceptor;
 import com.demo.common.model._MappingKit;
 import com.demo.index.IndexController;
+import com.jfinal.aop.Interceptor;
+import com.jfinal.aop.Invocation;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -12,8 +15,13 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.redis.RedisPlugin;
+import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
+import com.sun.jmx.snmp.tasks.Task;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -21,6 +29,13 @@ import com.jfinal.template.Engine;
  * 
  * API引导式配置
  */
+/**
+ * @author Created by zhaosy<a href="mailto:zhaosy@chsi.com.cn">Zhao Shiying</a>
+ *
+ * @version   Created in 2017/10/16 12:53
+ *
+ */
+
 public class DemoConfig extends JFinalConfig {
 	
 	/**
@@ -34,12 +49,12 @@ public class DemoConfig extends JFinalConfig {
 		/**
 		 * 特别注意：Eclipse 之下建议的启动方式
 		 */
-		JFinal.start("src/main/webapp", 80, "/", 5);
+//		JFinal.start("src/main/webapp", 80, "/", 5);
 		
 		/**
 		 * 特别注意：IDEA 之下建议的启动方式，仅比 eclipse 之下少了最后一个参数
 		 */
-		// JFinal.start("src/main/webapp", 80, "/");
+		 JFinal.start("src/main/webapp", 80, "/");
 	}
 	
 	/**
@@ -49,14 +64,16 @@ public class DemoConfig extends JFinalConfig {
 		// 加载少量必要配置，随后可用PropKit.get(...)获取值
 		PropKit.use("a_little_config.txt");
 		me.setDevMode(PropKit.getBoolean("devMode", false));
+//		me.setViewType(ViewType.JSP);
 	}
 	
 	/**
 	 * 配置路由
 	 */
 	public void configRoute(Routes me) {
-		me.add("/", IndexController.class, "/index");	// 第三个参数为该Controller的视图存放路径
-		me.add("/blog", BlogController.class);			// 第三个参数省略时默认与第一个参数值相同，在此即为 "/blog"
+		me.add("/", IndexController.class, "/index");    // 第三个参数为该Controller的视图存放路径
+		me.add("/blog", BlogController.class);            // 第三个参数省略时默认与第一个参数值相同，在此即为 "/blog"
+		me.add("/123-sf", BlogController.class);
 	}
 	
 	public void configEngine(Engine me) {
@@ -76,18 +93,38 @@ public class DemoConfig extends JFinalConfig {
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
 		// 所有映射在 MappingKit 中自动化搞定
 		_MappingKit.mapping(arp);
+		arp.setBaseSqlTemplatePath("/WEB-INF");
+		arp.addSqlTemplate("/source/demo.sql");
 		me.add(arp);
+
+		RedisPlugin redis = new RedisPlugin("","");
+		Cron4jPlugin cron = new Cron4jPlugin();
+		new Cron4jPlugin()
+		cron.addTask();
+		PropKit.use();
 	}
 	
 	public static DruidPlugin createDruidPlugin() {
 		return new DruidPlugin(PropKit.get("jdbcUrl"), PropKit.get("user"), PropKit.get("password").trim());
 	}
-	
+
 	/**
 	 * 配置全局拦截器
 	 */
 	public void configInterceptor(Interceptors me) {
-		
+		me.add(new Tx());
+		me.addGlobalActionInterceptor(new Interceptor() {
+			@Override
+			public void intercept(Invocation inv) {
+
+			}
+		});
+		me.addGlobalServiceInterceptor(new Interceptor() {
+			@Override
+			public void intercept(Invocation inv) {
+
+			}
+		});
 	}
 	
 	/**
