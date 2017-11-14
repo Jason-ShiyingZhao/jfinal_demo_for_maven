@@ -1,8 +1,11 @@
 package com.demo.common;
 
 import com.demo.blog.BlogController;
+import com.demo.blog.BlogInterceptor;
 import com.demo.common.model._MappingKit;
 import com.demo.index.IndexController;
+import com.jfinal.aop.Interceptor;
+import com.jfinal.aop.Invocation;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -12,9 +15,13 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.redis.RedisPlugin;
+import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
+import com.sun.jmx.snmp.tasks.Task;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -22,6 +29,13 @@ import com.jfinal.template.Engine;
  * <p>
  * API引导式配置
  */
+/**
+ * @author Created by zhaosy<a href="mailto:zhaosy@chsi.com.cn">Zhao Shiying</a>
+ *
+ * @version   Created in 2017/10/16 12:53
+ *
+ */
+
 public class DemoConfig extends JFinalConfig {
 
     /**
@@ -99,4 +113,5 @@ public class DemoConfig extends JFinalConfig {
     public void configHandler(Handlers me) {
 
     }
+
 }

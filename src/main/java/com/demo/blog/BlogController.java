@@ -12,6 +12,12 @@ import com.jfinal.plugin.activerecord.Page;
  * BlogController
  * 所有 sql 与业务逻辑写在 Model 或 Service 中，不要写在 Controller 中，养成好习惯，有利于大型项目的开发与维护
  */
+
+/**
+ * @author Created by zhaosy<a href="mailto:zhaosy@chsi.com.cn">Zhao Shiying</a>
+ * @version Created in 2017/10/16 12:52
+ */
+
 @Before(BlogInterceptor.class)
 public class BlogController extends Controller {
 
@@ -54,6 +60,7 @@ public class BlogController extends Controller {
         service.deleteById(getParaToInt());
         redirect("/blog");
     }
+
 }
 
 
